@@ -1,0 +1,36 @@
+@mixin border-bottom-1px($color){
+	position: relative;
+	&::after{
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		content:'';
+		display:block;
+		width: 100%;
+		border-bottom: 1px solid $color;
+	}
+}
+@mixin border-left-1px($color){
+	position: relative;
+	&::after{
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		content:'';
+		display:block;
+		width: 100%;
+		border-left: 1px solid $color;
+	}
+}
+@mixin border-right-1px($color){
+	position: relative;
+	&::after{
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		content:'';
+		display:block;
+		width: 100%;
+		border-right: 1px solid $color;
+	}
+}
