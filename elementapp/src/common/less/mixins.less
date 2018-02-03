@@ -1,4 +1,4 @@
-@mixin border-bottom-1px($color){
+.border-bottom-1px(@color){
 	position: relative;
 	&::after{
 		position: absolute;
@@ -7,10 +7,17 @@
 		content:'';
 		display:block;
 		width: 100%;
-		border-bottom: 1px solid $color;
+		border-bottom: 1px solid @color;
 	}
 }
-@mixin border-left-1px($color){
+.page-width {    
+    width: 100%;
+    max-width: 1920px;
+    color:red;
+    margin-right: auto;
+    margin-left: auto;
+}
+.border-left-1px(@color){
 	position: relative;
 	&::after{
 		position: absolute;
@@ -19,10 +26,10 @@
 		content:'';
 		display:block;
 		width: 100%;
-		border-left: 1px solid $color;
+		border-left: 1px solid @color;
 	}
 }
-@mixin border-right-1px($color){
+.border-right-1px(@color){
 	position: relative;
 	&::after{
 		position: absolute;
@@ -31,6 +38,29 @@
 		content:'';
 		display:block;
 		width: 100%;
-		border-right: 1px solid $color;
+		border-right: 1px solid @color;
 	}
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+  .border-bottom-1px{
+    &::after{
+      -webkit-transform: scaleY(.7);
+      -moz-transform: scaleY(.7);
+      -ms-transform: scaleY(.7);
+      -o-transform: scaleY(.7);
+      transform: scaleY(.7);
+    }
+  }
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+  .border-bottom-1px{
+    &::after{
+      -webkit-transform: scaleY(.5);
+      -moz-transform: scaleY(.5);
+      -ms-transform: scaleY(.5);
+      -o-transform: scaleY(.5);
+      transform: scaleY(.5);
+    }
+  }
 }

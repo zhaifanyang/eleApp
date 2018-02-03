@@ -1,15 +1,15 @@
 <template>
   <div class="hello">
-  hello world
+  ratings
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: '',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: ''
     }
   }
 }
@@ -17,5 +17,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>
