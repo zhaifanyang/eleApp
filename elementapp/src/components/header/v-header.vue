@@ -30,32 +30,40 @@
     <div class="background">
         <img :src="seller.avatar" width='100%' height='100%'>
     </div>
-    <div class="detail" v-show='detailShow'>
-        <div class="detail-wrapper">
-            <div class="detail-main">
-                <h1>{{seller.name}}</h1>
-                <div class="star-wrapper">
-                    <Star :size='48' :score='seller.score'></Star>
-                </div>
-                <div class="title">
-                    <div class="line"></div>
-                    <div class="text">优惠信息</div>
-                    <div class="line"></div>
-                </div>
-                <div class="title">
-                    <div class="line"></div>
-                    <div class="text">商家公告</div>
-                    <div class="line"></div>
-                </div>
-                <div class="detail-bulletin">
-                    {{seller.bulletin}}
+    <transition name='fade'>
+        <div class="detail" v-show='detailShow'>
+            <div class="detail-wrapper">
+                <div class="detail-main">
+                    <h1>{{seller.name}}</h1>
+                    <div class="star-wrapper">
+                        <Star :size='48' :score='seller.score'></Star>
+                    </div>
+                    <div class="title">
+                        <div class="line"></div>
+                        <div class="text">优惠信息</div>
+                        <div class="line"></div>
+                    </div>
+                    <ul v-if="seller.supports" class="detail-supports">
+                        <li class="support-item" v-for="(item, index) in seller.supports" :key='index'>
+                            <span class="icon" :class="mapSupports[seller.supports[index].type]"></span>
+                            <span class="text">{{ seller.supports[index].description }}</span>
+                        </li>
+                    </ul>
+                    <div class="title">
+                        <div class="line"></div>
+                        <div class="text">商家公告</div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="detail-bulletin">
+                        {{seller.bulletin}}
+                    </div>
                 </div>
             </div>
+            <div class="detail-close" @click='detail'>
+                <i class="icon-close"></i>
+            </div>
         </div>
-        <div class="detail-close" @click='detail'>
-            <i class="icon-close"></i>
-        </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -64,7 +72,7 @@ import Star from '@/components/star/star'
 export default {
   data () {
     return {
-      mapSupports: ['decrease_1', 'discount_1', 'special_1', 'invoice_1', 'guarantee_1'],
+      mapSupports: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
       detailShow: false
     }
   },
@@ -142,19 +150,19 @@ export default {
                     background-size: 0.64rem 0.64rem;
                     background-repeat: no-repeat;
                     margin-right: 0.213333rem;
-                    &.decrease_1{
+                    &.decrease{
                         .bg-image('decrease_1');
                     }
-                    &.discount_1{
+                    &.discount{
                         .bg-image('discount_1');
                     }
-                    &.special_1{
+                    &.special{
                         .bg-image('special_1');
                     }
-                    &.invoice_1{
+                    &.invoice{
                         .bg-image('invoice_1');
                     }
-                    &.guarantee_1{
+                    &.guarantee{
                         .bg-image('guarantee_1');
                     }
                 }
@@ -267,6 +275,46 @@ export default {
                         padding: 0 0.64rem;
                     }
                 }
+                .detail-supports {
+                        width: 80%;
+                        margin: 0 auto;
+                        .support-item {
+                            padding: 0 12px;
+                            margin-bottom: 12px;
+                            font-size: 0;
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+                            .icon {
+                                display: inline-block;
+                                width: 0.853333rem;
+                                height: 0.853333rem;
+                                vertical-align: top;
+                                margin-right: 0.32rem;
+                                background-size: 0.853333rem 0.853333rem;
+                                background-repeat: no-repeat;
+                                &.decrease {
+                                    .bg-image('decrease_2');
+                                }
+                                &.discount {
+                                    .bg-image('discount_2');
+                                }
+                                &.guarantee {
+                                    .bg-image('guarantee_2');
+                                }
+                                &.invoice {
+                                    .bg-image('invoice_2');
+                                }
+                                &.special {
+                                    .bg-image('special_2');
+                                }
+                            }
+                            .text {
+                                font-size: 0.64rem;
+                                line-height: 0.853333rem;
+                            }
+                        }
+                    }
                 .detail-bulletin{
                     width: 80%;
                     margin: 0 auto;
@@ -287,6 +335,12 @@ export default {
                 color: rgba(255,255,255,.5);
             }
         }
+    }
+    .fade-enter,.fade-leave-active{
+        opacity: 0;
+    }
+    .fade-enter-active,.fade-leave-active{
+        transition: all .5s
     }
 }
 </style>
