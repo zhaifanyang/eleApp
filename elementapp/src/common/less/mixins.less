@@ -1,4 +1,4 @@
-.border-bottom-1px(@color){
+.border-bottom-1px(@color) {
 	position: relative;
 	&::after{
 		position: absolute;
@@ -17,7 +17,7 @@
     margin-right: auto;
     margin-left: auto;
 }
-.border-left-1px(@color){
+.border-left-1px(@color) {
 	position: relative;
 	&::after{
 		position: absolute;
@@ -29,7 +29,7 @@
 		border-left: 1px solid @color;
 	}
 }
-.border-right-1px(@color){
+.border-right-1px(@color) {
 	position: relative;
 	&::after{
 		position: absolute;
@@ -40,6 +40,13 @@
 		width: 100%;
 		border-right: 1px solid @color;
 	}
+}
+
+.bg-image(@url){
+ 	background-image:~'url(@{url}@2x.png)';
+ 		@media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3){
+ 		  background-image:~'url(@{url}@3x.png)';
+	    }
 }
 
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
