@@ -17,36 +17,81 @@
                 <span class="text">{{seller.supports[0].description}}</span>
             </div>
         </div>
-        <div class="supports-item" v-if='seller.supports'>
+        <div class="supports-item" v-if='seller.supports' @click='detail'>
             <span>{{seller.supports.length}}个</span>
             <i class="icon-keyboard_arrow_right"></i>
+        </div>
+    </div>
+    <div class="bulletin">
+        <span class="icon"></span>
+        <span class="bulletin-text">{{seller.bulletin}}</span>
+        <i class="icon-keyboard_arrow_right"></i>
+    </div>
+    <div class="background">
+        <img :src="seller.avatar" width='100%' height='100%'>
+    </div>
+    <div class="detail" v-show='detailShow'>
+        <div class="detail-wrapper">
+            <div class="detail-main">
+                <h1>{{seller.name}}</h1>
+                <div class="star-wrapper">
+                    <Star :size='48' :score='seller.score'></Star>
+                </div>
+                <div class="title">
+                    <div class="line"></div>
+                    <div class="text">优惠信息</div>
+                    <div class="line"></div>
+                </div>
+                <div class="title">
+                    <div class="line"></div>
+                    <div class="text">商家公告</div>
+                    <div class="line"></div>
+                </div>
+                <div class="detail-bulletin">
+                    {{seller.bulletin}}
+                </div>
+            </div>
+        </div>
+        <div class="detail-close" @click='detail'>
+            <i class="icon-close"></i>
         </div>
     </div>
   </div>
 </template>
 
 <script>
+import Star from '@/components/star/star'
 export default {
   data () {
     return {
-      mapSupports: ['decrease_1', 'discount_1', 'special_1', 'invoice_1', 'guarantee_1']
+      mapSupports: ['decrease_1', 'discount_1', 'special_1', 'invoice_1', 'guarantee_1'],
+      detailShow: false
     }
   },
-  props: ['seller']
+  methods: {
+    detail () {
+      this.detailShow = !this.detailShow
+    }
+  },
+  props: ['seller'],
+  components: {
+    Star
+  }
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='less'>
 @import "../../common/less/mixins";
 .header{
+    position: relative;
     background-color: rgba(7,17,27,.5);
     overflow: hidden;
     color: #fff;
-    font-size: 0;
     .wrap{
         position: relative;
         top: 0;
         left: 0;
+        font-size: 0;
         padding: 1.28rem 0.64rem 0.96rem 1.28rem;
         .avatar{
             width: 3.413333rem;
@@ -91,9 +136,11 @@ export default {
             .supports{
                 .icon{
                     display: inline-block;
+                    vertical-align: sub;
                     width: 0.64rem;
                     height: 0.64rem;
                     background-size: 0.64rem 0.64rem;
+                    background-repeat: no-repeat;
                     margin-right: 0.213333rem;
                     &.decrease_1{
                         .bg-image('decrease_1');
@@ -115,7 +162,6 @@ export default {
                     font-size: 0.533333rem;
                     font-weight: 200;
                     line-height: 0.64rem;
-                    vertical-align: top;
                 }
             }
         }
@@ -129,11 +175,116 @@ export default {
             span{
                 font-size: 0.533333rem;
                 font-weight: 200;
-                vertical-align: top;
+                vertical-align: sub;
             }
             i{
                 font-size: 0.533333rem;
                 margin-left: 0.106667rem;
+                vertical-align: sub;
+            }
+        }
+    }
+    .bulletin{
+        position: relative;
+        height: 1.493333rem;
+        line-height: 1.493333rem;
+        padding: 0 1.173333rem 0 0.64rem;
+        background: rgba(7, 17, 27, .2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.533333rem;
+        .icon{
+            display: inline-block;
+            width: 1.173333rem;
+            height: 0.64rem;
+            .bg-image('bulletin');
+            background-size: 1.173333rem 0.64rem;
+            background-repeat: no-repeat;
+            vertical-align: sub;
+        }
+        .bulletin-text{
+            margin: 0 0.213333rem;
+            font-size: 0.533333rem;
+            line-height: 1.493333rem;
+        }
+        .icon-keyboard_arrow_right{
+            position: absolute;
+            font-size: 0.533333rem;
+            right: 0.64rem;
+            top: 0.533333rem;
+        }
+    }
+    .background{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: -1;
+        filter: blur(10px);
+    }
+    .detail{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(7,17,27,.8);
+        overflow: auto;
+        z-index: 10;
+        .detail-wrapper{
+            width: 100%;
+            min-height: 100%;
+            .detail-main{
+                padding-top: 3.413333rem;
+                padding-bottom: 3.413333rem;
+                h1{
+                    font-size: 0.853333rem;
+                    font-weight: 700;
+                    line-height: 0.853333rem;
+                    margin-bottom: 0.853333rem;
+                    text-align: center;
+                }
+                .star-wrapper{
+                    margin-top: 0.96rem;
+                    padding: 0.106667rem 0;
+                    text-align: center;
+                }
+                .title{
+                    width: 80%;
+                    margin: 0 auto;
+                    display: flex;
+                    margin: 1.493333rem auto 1.28rem auto;
+                    .line{
+                        flex:1;
+                        position: relative;
+                        top: -0.373333rem;
+                        border-bottom: 1px solid rgba(255,255,255,.2);
+                    }
+                    .text{
+                        font-size: 0.746667rem;
+                        display: inline-block;
+                        padding: 0 0.64rem;
+                    }
+                }
+                .detail-bulletin{
+                    width: 80%;
+                    margin: 0 auto;
+                    font-size: 0.64rem;
+                    font-weight: 200;
+                    line-height: 1.28rem;
+                }
+            }
+        }
+        .detail-close{
+            position: relative;
+            width: 1.706667rem;
+            height: 1.706667rem;
+            margin: -3.413333rem auto 0;
+            clear: both;
+            i{
+                font-size: 1.706667rem;
+                color: rgba(255,255,255,.5);
             }
         }
     }
