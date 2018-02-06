@@ -18,7 +18,7 @@
         </router-link>
       </div>
     </div>
-    <router-view/>
+    <router-view :seller='seller'/>
   </div>
 </template>
 
@@ -43,7 +43,7 @@ export default {
 }
 </script>
 
-<style lang='less' scope>
+<style lang='less'>
 @import "common/less/index";
 .tab{
     display: flex;

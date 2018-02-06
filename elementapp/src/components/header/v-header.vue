@@ -23,8 +23,7 @@
         </div>
     </div>
     <div class="bulletin">
-        <span class="icon"></span>
-        <span class="bulletin-text">{{seller.bulletin}}</span>
+        <span class="icon"></span><span class="bulletin-text">{{seller.bulletin}}</span>
         <i class="icon-keyboard_arrow_right"></i>
     </div>
     <div class="background">
@@ -131,7 +130,6 @@ export default {
                     font-size: 0.853333rem;
                     font-weight: bold;
                     height: 0.96rem;
-                    line-height: 0.96rem;
                     vertical-align:top;
                 }
             }
@@ -144,7 +142,7 @@ export default {
             .supports{
                 .icon{
                     display: inline-block;
-                    vertical-align: sub;
+                    vertical-align: top;
                     width: 0.64rem;
                     height: 0.64rem;
                     background-size: 0.64rem 0.64rem;
@@ -183,7 +181,7 @@ export default {
             span{
                 font-size: 0.533333rem;
                 font-weight: 200;
-                vertical-align: sub;
+                vertical-align: top;
             }
             i{
                 font-size: 0.533333rem;
@@ -204,12 +202,13 @@ export default {
         font-size: 0.533333rem;
         .icon{
             display: inline-block;
+            vertical-align: top;
+            margin-top: 0.346667rem;
             width: 1.173333rem;
             height: 0.64rem;
             .bg-image('bulletin');
             background-size: 1.173333rem 0.64rem;
             background-repeat: no-repeat;
-            vertical-align: sub;
         }
         .bulletin-text{
             margin: 0 0.213333rem;
