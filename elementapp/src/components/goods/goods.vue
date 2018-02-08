@@ -27,6 +27,9 @@
                 <div class="price">
                   <span class="now">￥{{foods.price}}</span><span class="old" v-if='foods.oldPrice'>￥{{foods.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartControl :food='foods'></cartControl>
+                </div>
               </div>
             </li>
           </ul>
@@ -40,14 +43,14 @@
 <script>
 import BScroll from 'better-scroll'
 import shopcart from '@/components/shopcart/shopcart'
+import cartControl from '@/components/cartControl/cartControl'
 export default {
   data () {
     return {
       goods: [],
       mapSupports: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
       heightList: [],
-      scrollY: 0,
-      selectFoods: [{price: 11, count: 10}]
+      scrollY: 0
     }
   },
   methods: {
@@ -91,6 +94,17 @@ export default {
         }
       }
       return 0
+    },
+    selectFoods () {
+      let foods = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   },
   created () {
@@ -106,7 +120,8 @@ export default {
   },
   props: ['seller'],
   components: {
-    shopcart
+    shopcart,
+    cartControl
   }
 }
 </script>
@@ -208,6 +223,7 @@ export default {
       .desc{
         flex: 1;
         font-size: 0.32rem;
+        position: relative;
         .name{
           margin-top: 0.106667rem;
           line-height: 0.746667rem;
@@ -243,6 +259,11 @@ export default {
             color: rgb(147,153,159);
             text-decoration: line-through;
           }
+        }
+        .cartcontrol-wrapper{
+          position: absolute;
+          right: 0;
+          bottom: -0.133333rem;
         }
       }
     }

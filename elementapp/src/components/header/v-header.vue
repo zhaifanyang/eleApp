@@ -335,11 +335,11 @@ export default {
             }
         }
     }
-    .fade-enter,.fade-leave-active{
-        opacity: 0;
-    }
-    .fade-enter-active,.fade-leave-active{
-        transition: all .5s
-    }
+}
+.fade-enter-active,.fade-leave-active {
+    transition: all .5s;
+}
+.fade-enter,.fade-leave-active {
+    opacity: 0;
 }
 </style>

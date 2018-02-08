@@ -61,10 +61,7 @@ export default {
       default: 0
     },
     selectFoods: {
-      type: Array,
-      default () {
-        return []
-      }
+      type: Array
     }
   }
 }
