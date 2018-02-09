@@ -28,7 +28,7 @@
                   <span class="now">￥{{foods.price}}</span><span class="old" v-if='foods.oldPrice'>￥{{foods.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartControl :food='foods'></cartControl>
+                  <cartControl :food='foods' v-on:cartAdd='cartAdd'></cartControl>
                 </div>
               </div>
             </li>
@@ -36,7 +36,7 @@
         </li>
       </ul>
     </div>
-    <shopcart :deliveryPrice='seller.deliveryPrice' :minPrice='seller.minPrice' :selectFoods='selectFoods'></shopcart>
+    <shopcart :deliveryPrice='seller.deliveryPrice' :minPrice='seller.minPrice' :selectFoods='selectFoods' ref='selectfood'></shopcart>
   </div>
 </template>
 
@@ -82,6 +82,9 @@ export default {
       }
       let foods = this.$refs.foodsScroll.getElementsByClassName('foods-item')
       this.foodsScroll.scrollToElement(foods[index], 400)
+    },
+    cartAdd (e) {
+      this.$refs.selectfood.drop(e)
     }
   },
   computed: {

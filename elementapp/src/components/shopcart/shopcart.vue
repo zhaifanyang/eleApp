@@ -1,5 +1,4 @@
 <template>
-<div>
   <div class="shopcart">
     <div class="content">
       <div class="icon-wrap">
@@ -14,7 +13,13 @@
     <div class="shopping">
       <div class="pay" :class='{bgHeight: totalPrice>=minPrice}'>{{payDesc}}</div>
     </div>
-  </div>
+    <template v-for='(ball,index) in balls'>
+      <transition name='drop' :key='index' @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+        <div class="drop-wrapper" v-show='ball.show'>
+          <div class="inner"></div>
+        </div>
+      </transition>
+    </template>
 </div>
 
 </template>
@@ -23,6 +28,24 @@
 export default {
   data () {
     return {
+      balls: [
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        }
+      ],
+      dropBalls: []
     }
   },
   computed: {
@@ -48,6 +71,55 @@ export default {
         return `还差￥${diff}起送`
       } else {
         return '去支付'
+      }
+    }
+  },
+  methods: {
+    drop (el) {
+      for (let i = 0; i < this.balls.length; i++) {
+        let ball = this.balls[i]
+        if (!ball.show) {
+          ball.show = true
+          ball.el = el
+          this.dropBalls.push(ball)
+          return
+        }
+      }
+    },
+    beforeEnter (el) {
+      let count = this.balls.length
+      while (count--) {
+        let ball = this.balls[count]
+        if (ball.show) {
+          let rect = ball.el.getBoundingClientRect()
+          let x = rect.left - 14
+          let y = -(window.innerHeight - rect.top - 37)
+          el.style.display = ''
+          el.style.webkitTransform = `translate3d(0,${y}px,0)`
+          el.style.transform = `translate3d(0,${y}px,0)`
+
+          let inner = el.getElementsByClassName('inner')[0]
+          inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+          inner.style.transform = `translate3d(${x}px,0,0)`
+        }
+      }
+    },
+    enter (el) {
+      // eslint-disable-next-line
+      let rf = el.offsetHeight
+      this.$nextTick(() => {
+        el.style.webkitTransform = 'translate3d(0,0,0)'
+        el.style.transform = 'translate3d(0,0,0)'
+        let inner = el.getElementsByClassName('inner')[0]
+        inner.style.webkitTransform = 'translate3d(0,0,0)'
+        inner.style.transform = 'translate3d(0,0,0)'
+      })
+    },
+    afterEnter (el) {
+      let ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
       }
     }
   },
@@ -161,6 +233,24 @@ export default {
       &.bgHeight{
         background-color: #00b43c;
         color: #fff;
+      }
+    }
+  }
+  .drop-wrapper{
+    position: fixed;
+    left: 1.866667rem;
+    bottom: 1.333333rem;
+    z-index: 100;
+    .inner{
+      width:0.533333rem;
+      height:0.533333rem;
+      border-radius: 50%;
+      background-color: rgb(0, 160, 220);
+    }
+    &.drop-enter-active {
+      transition: all .4s cubic-bezier(.59,-0.22,.83,.67);
+      .inner {
+        transition: all .4s linear;
       }
     }
   }

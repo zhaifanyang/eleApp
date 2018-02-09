@@ -7,7 +7,7 @@
         </div>
       </transition>
       <div class="content" v-show='food.count>0'>{{food.count}}</div>
-      <div class="add icon-add_circle" @click='addCart()'></div>
+      <div class="add icon-add_circle" @click='addCart'></div>
     </div>
   </div>
 </template>
@@ -21,12 +21,13 @@ export default {
     }
   },
   methods: {
-    addCart () {
+    addCart (event) {
       if (!this.food.count) {
         Vue.set(this.food, 'count', 1)
       } else {
         this.food.count++
       }
+      this.$emit('cartAdd', event.target)
     },
     cutCart () {
       this.food.count--
