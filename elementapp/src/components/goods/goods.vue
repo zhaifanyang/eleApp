@@ -83,8 +83,17 @@ export default {
       let foods = this.$refs.foodsScroll.getElementsByClassName('foods-item')
       this.foodsScroll.scrollToElement(foods[index], 400)
     },
+    // cartAdd (e) {
+    //   this.$refs.selectfood.drop(e)
+    // },
     cartAdd (e) {
-      this.$refs.selectfood.drop(e)
+      // eslint-disable-next-line
+      // 体验优化，异步执行下落动画
+      this.$nextTick(() => {
+      // eslint-disable-next-line
+      // 父组件传递给子组件
+        this.$refs.selectfood.drop(e)
+      })
     }
   },
   computed: {

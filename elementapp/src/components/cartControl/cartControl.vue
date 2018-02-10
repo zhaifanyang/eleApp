@@ -1,14 +1,12 @@
 <template>
-  <div class="cartControl">
-    <div class="cart-item">
-      <transition name='fade'>
-        <div class="del" v-show='food.count>0'  @click='cutCart()'>
-          <span class="inner icon-remove_circle_outline"></span>
-        </div>
-      </transition>
-      <div class="content" v-show='food.count>0'>{{food.count}}</div>
-      <div class="add icon-add_circle" @click='addCart'></div>
-    </div>
+  <div class="cartcontrol">
+    <transition name="move">
+      <div class="cart-decrease" v-show="food.count > 0" @click.stop.prevent='cutCart'>
+        <span class="inner icon-remove_circle_outline"></span>
+      </div>
+    </transition>
+    <div class="cart-count" v-show="food.count > 0">{{ food.count }}</div>
+    <div class="cart-add icon-add_circle" @click.stop.prevent='addCart'></div>
   </div>
 </template>
 
@@ -22,6 +20,9 @@ export default {
   },
   methods: {
     addCart (event) {
+      if (!event._constructed) {
+        return
+      }
       if (!this.food.count) {
         Vue.set(this.food, 'count', 1)
       } else {
@@ -29,46 +30,62 @@ export default {
       }
       this.$emit('cartAdd', event.target)
     },
-    cutCart () {
-      this.food.count--
+    cutCart (event) {
+      if (!event._constructed) {
+        return
+      }
+      if (this.food.count) {
+        this.food.count--
+      }
     }
   }
 }
 </script>
 
 <style scoped lang='less'>
-.cart-item{
+.cartcontrol {
   font-size: 0;
-  .del,.add{
+  .cart-decrease {
     display: inline-block;
-    font-size: 1.28rem;
-    line-height: 1.28rem;
-    width: 1.28rem;
-    height: 1.28rem;
-    padding:0 0.64rem;
-    color: rgb(0,160,220);
+    padding: 6px;
+    .inner {
+      display: inline-block;
+      line-height: 24px;
+      font-size: 24px;
+      color: rgb(0, 160, 220);
+    }
+    &.move-enter-active, &.move-leave-active {
+      transition: all .5s;
+      transform: translate3d(0, 0, 0);
+      .inner{
+          transition: all .5s;
+          transform: rotate(0deg);
+      }
+    }
+    &.move-enter, &.move-leave-active {
+      opacity: 0;
+      transform: translate3d(24px, 0, 0);
+      .inner{
+          transform: rotate(180deg);
+      }
+    }
   }
-  .content{
-    display:inline-block;
+  .cart-count {
+    display: inline-block;
     vertical-align: top;
-    font-size: 0.533333rem;
-    color: rgb(147,153,159);
-    padding-top: 0.373333rem;
+    width: 12px;
+    padding-top: 6px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 10px;
+    color: rgb(147, 153, 159);
   }
-}
-.fade-enter-active,.fade-leave-active {
-  transition: all .5s;
-  transform: translate3d(0, 0, 0);
-  .inner{
-    transition: all .5s;
-    transform: rotate(0deg);
-  }
-}
-.fade-enter,.fade-leave-active {
-  opacity: 0;
-  transform: translate3d(1.28rem, 0, 0);
-  .inner{
-    transform: rotate(180deg);
+  .cart-add {
+    display: inline-block;
+    line-height: 24px;
+    font-size: 24px;
+    padding: 6px;
+    color: rgb(0, 160, 220);
   }
 }
 </style>

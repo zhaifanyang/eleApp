@@ -1,17 +1,20 @@
 <template>
+<div>
   <div class="shopcart">
-    <div class="content">
-      <div class="icon-wrap">
-        <div class="count" v-show='totalCount>0'>{{totalCount}}</div>
-        <div class="ico" :class='{lineHeight: totalCount>0}'>
-          <i class="icon-shopping_cart"></i>
+    <div class="content" @click="toggleList">
+      <div class="content-left" :class="{'highlight': totalCount > 0}">
+        <div class="logo-wrapper">
+          <div class="logo">
+            <i class="icon-shopping_cart"></i>
+          </div>
+          <div class="num" v-show="totalCount > 0">{{ totalCount }}</div>
         </div>
+        <div class="price">￥{{ totalPrice }}</div>
+        <div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
       </div>
-      <div class="price">￥{{totalPrice}}</div>
-      <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
-    </div>
-    <div class="shopping">
-      <div class="pay" :class='{bgHeight: totalPrice>=minPrice}'>{{payDesc}}</div>
+      <div class="content-right" @click.stop.prevent="pay">
+        <div class="pay" :class="payClass">{{ payDesc }}</div>
+      </div>
     </div>
     <template v-for='(ball,index) in balls'>
       <transition name='drop' :key='index' @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
@@ -20,11 +23,35 @@
         </div>
       </transition>
     </template>
+    <transition name="fold">
+        <div class="shopcart-list" v-show="listShow">
+            <div class="list-header">
+                <h1 class="title">购物车</h1>
+                <span class="empty" @click="clearTotal">清空</span>
+            </div>
+            <div class="list-content" ref="listContent">
+                <ul>
+                    <li class="food border-1px" v-for="(food,index) in selectFoods" :key='index'>
+                        <span class="name">{{ food.name }}</span>
+                        <div class="price">￥{{ food.price * food.count }}</div>
+                        <div class="cartcontrol-wrapper">
+                            <cartControl :food="food"></cartControl>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </transition>
+  </div>
+  <transition name="fade">
+    <div class="list-mask" v-show="listShow" @click="hideList"></div>
+  </transition>
 </div>
-
 </template>
 
 <script>
+import cartControl from '@/components/cartControl/cartControl'
+import BScroll from 'better-scroll'
 export default {
   data () {
     return {
@@ -45,7 +72,8 @@ export default {
           show: false
         }
       ],
-      dropBalls: []
+      dropBalls: [],
+      fold: true
     }
   },
   computed: {
@@ -72,9 +100,45 @@ export default {
       } else {
         return '去支付'
       }
+    },
+    listShow () {
+      if (!this.totalCount) {
+        // eslint-disable-next-line
+        this.fold = true
+        return false
+      }
+      let show = !this.fold
+      if (show) {
+        this.$nextTick(() => {
+          if (!this.listScroll) {
+            // eslint-disable-next-line
+            this.listScroll = new BScroll(this.$refs.listContent, {
+              click: true
+            })
+          } else {
+            this.listScroll.refresh()
+          }
+        })
+      }
+      return show
+    },
+    payClass () {
+      if (this.totalPrice < this.minPrice) {
+        return 'not-enough'
+      } else {
+        return 'enough'
+      }
     }
   },
   methods: {
+    clearTotal () {
+      this.selectFoods.forEach(food => {
+        food.count = 0
+      })
+    },
+    toggleList () {
+      this.fold = !this.fold
+    },
     drop (el) {
       for (let i = 0; i < this.balls.length; i++) {
         let ball = this.balls[i]
@@ -121,6 +185,15 @@ export default {
         ball.show = false
         el.style.display = 'none'
       }
+    },
+    hideList () {
+      this.fold = true
+    },
+    pay () {
+      if (this.totalPrice < this.minPrice) {
+        return
+      }
+      window.alert(`支付${this.totalPrice}元`)
     }
   },
   props: {
@@ -135,104 +208,117 @@ export default {
     selectFoods: {
       type: Array
     }
+  },
+  components: {
+    cartControl
   }
 }
 </script>
 
 <style scoped lang='less'>
-.shopcart {
-  display: flex;
+@import "../../common/less/mixins";
+.shopcart{
   position: fixed;
-  bottom: 0;
   left: 0;
+  bottom: 0;
+  z-index: 50;
   width: 100%;
-  height: 2.56rem;
-  background-color: #141d27;
-  .content{
-    flex: 1;
-    .icon-wrap{
-      position:relative;
-      left: 0.64rem;
-      bottom: 0.426667rem;
-      display: inline-block;
-      width: 2.986667rem;
-      height: 2.986667rem;
-      border-radius: 50%;
-      background-color: #141d27;
-      box-sizing: border-box;
-      padding: 0.32rem;
-      .count{
-        position: absolute;
-        top: 0;
-        right: 0;
-        color: #fff;
-        width: 1.28rem;
-        height: 0.853333rem;
-        line-height: 0.853333rem;
-        text-align: center;
-        background-color: #f01414;
-        border-radius: 0.853333rem;
-        font-size: 0.48rem;
-        font-weight: 700;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,.4);
-      }
-      .ico{
-        width: 2.346667rem;
-        height: 2.346667rem;
-        line-height: 2.346667rem;
+  height: 48px;
+  .content {
+    display: flex;
+    background: #141d27;
+    font-size: 0;
+    color: rgba(255, 255, 255, .4);
+    .content-left {
+      flex: 1;
+      .logo-wrapper {
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        top: -10px;
+        margin: 0 18px;
+        padding: 6px;
+        width: 56px;
+        height: 56px;
+        box-sizing: border-box;
         border-radius: 50%;
-        background-color: #2b343c;
-        text-align: center;
-        &.lineHeight{
-          background: rgb(0, 160, 220);
-          .icon-shopping_cart{
-            color: #fff;
+        background: #141d27;
+        .logo {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: #2b343c;
+          text-align: center;
+          .icon-shopping_cart {
+            font-size: 24px;
+            line-height: 44px;
+            color: #80858a;
           }
         }
-        .icon-shopping_cart{
-          font-size: 1.28rem;
-          color: #80858a;
-          line-height: 2.346667rem;
+        .num {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 24px;
+          height: 16px;
+          line-height: 16px;
+          text-align: center;
+          border-radius: 16px;
+          font-size: 9px;
+          font-weight: 700;
+          color: #fff;
+          background: rgb(240, 20, 20);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .4);
+        }
+      }
+      .price {
+        vertical-align: top;
+        display: inline-block;
+        line-height: 24px;
+        margin-top: 12px;
+        padding-right: 12px;
+        box-sizing: border-box;
+        border-right: 1px solid rgba(255, 255, 255, .1);
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .desc {
+        display: inline-block;
+        vertical-align: top;
+        line-height: 24px;
+        margin: 12px 0 0 12px;
+        font-size: 10px;
+      }
+      &.highlight {
+        .logo-wrapper {
+          .logo {
+            background: rgb(0, 160, 220);
+            .icon-shopping_cart {
+              color: #fff;
+            }
+          }
+        }
+        .price {
+          color: #fff;
         }
       }
     }
-    .price{
-      display: inline-block;
-      position: relative;
-      left: 0.96rem;
-      bottom: 0.32rem;
-      height: 1.28rem;
-      padding-right: 0.64rem;
-      line-height: 1.28rem;
-      font-size: 0.853333rem;
-      color: rgba(255,255,255,.4);
-      font-weight: 700;
-      border-right: 1px solid rgba(255,255,255,.1)
-    }
-    .desc{
-      display: inline-block;
-      font-size: 0.533333rem;
-      color: rgba(255,255,255,.4);
-      font-weight: 700;
-      line-height: 1.28rem;
-      vertical-align: top;
-      margin: 0.8rem 0 0 1.28rem;
-    }
-  }
-  .shopping {
-    flex: 0 0 5.6rem;
-    width: 5.6rem;
-    .pay{
-      font-size: 0.64rem;
-      color: #979a9c;
-      font-weight: 700;
-      height: 2.56rem;
-      line-height: 2.56rem;
-      text-align: center;
-      background-color: #2b333b;
-      &.bgHeight{
-        background-color: #00b43c;
-        color: #fff;
+    .content-right {
+      flex: 0 0 105px;
+      width: 105px;
+      .pay {
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        &.not-enough {
+          background: #2b333b;
+        }
+        &.enough {
+          background: #00b43c;
+          color: #fff;
+        }
       }
     }
   }
@@ -247,12 +333,90 @@ export default {
       border-radius: 50%;
       background-color: rgb(0, 160, 220);
     }
-    &.drop-enter-active {
+    &.drop-enter-active{
       transition: all .4s cubic-bezier(.59,-0.22,.83,.67);
-      .inner {
+      .inner{
         transition: all .4s linear;
       }
     }
+  }
+  .shopcart-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    transform: translate3d(0, -100%, 0);
+    &.fold-enter-active, &.fold-leave-active {
+        transition: all .5s;
+    }
+    &.fold-enter, &.fold-leave-active {
+        transform: translate3d(0, 0, 0);
+    }
+    .list-header {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 18px;
+        background: #f3f5f7;
+        border-bottom: 1px solid rgba(7, 17, 27, .1);
+        .title {
+            float: left;
+            font-size: 14px;
+            color: rgb(7, 17, 27);
+        }
+        .empty {
+            float: right;
+            font-size: 12px;
+            color: rgb(0, 160, 220);
+        }
+    }
+    .list-content {
+        padding: 0 18px;
+        max-height: 217px;
+        background: #fff;
+        overflow: hidden;
+        .food {
+            position: relative;
+            padding: 12px 0;
+            box-sizing: border-box;
+            .border-bottom-1px(rgba(7, 17, 27, .1));
+            .name {
+                line-height: 24px;
+                font-size: 14px;
+                color: rgb(7, 17, 27);
+            }
+            .price {
+                position: absolute;
+                right: 90px;
+                bottom: 12px;
+                line-height: 24px;
+                font-weight: 700;
+                font-size: 14px;
+                color: rgb(240, 20, 20);
+            }
+            .cartcontrol-wrapper {
+                position: absolute;
+                bottom: 6px;
+                right: 0;
+            }
+        }
+    }
+  }
+}
+.list-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  background: rgba(7, 17, 27, .6);
+  backdrop-filter: blur(10px);
+  &.fade-enter-active, .fade-leave-active {
+    transition: all .5s;
+  }
+  .fade-enter, .fade-leave-active {
+    opacity: 0
   }
 }
 </style>
