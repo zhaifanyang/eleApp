@@ -238,7 +238,13 @@ export default {
         height: 100%;
         background-color: rgba(7,17,27,.8);
         overflow: auto;
-        z-index: 10;
+        z-index: 100;
+        &.fade-enter-active, &.fade-leave-active {
+            transition: opacity .5s
+        }
+        &.fade-enter, &.fade-leave-active {
+            opacity: 0
+        }
         .detail-wrapper{
             width: 100%;
             min-height: 100%;
@@ -336,10 +342,5 @@ export default {
         }
     }
 }
-.fade-enter-active,.fade-leave-active {
-    transition: all .5s;
-}
-.fade-enter,.fade-leave-active {
-    opacity: 0;
-}
+
 </style>

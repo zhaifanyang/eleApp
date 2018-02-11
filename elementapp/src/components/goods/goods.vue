@@ -14,7 +14,7 @@
         <li class="foods-item" v-for='(item,index) in goods' :key='index'>
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li class="content" v-for='(foods,index) in item.foods' :key='index'>
+            <li class="content" v-for='(foods,index) in item.foods' :key='index' @click='selectFood(foods,$event)'>
               <div class="icon">
                 <img :src="foods.icon" class="icon-item">
               </div>
@@ -37,6 +37,7 @@
       </ul>
     </div>
     <shopcart :deliveryPrice='seller.deliveryPrice' :minPrice='seller.minPrice' :selectFoods='selectFoods' ref='selectfood'></shopcart>
+    <food :selectedFood='selectedFood' ref='food' v-on:addFirst='cartAdd'></food>
   </div>
 </template>
 
@@ -44,16 +45,25 @@
 import BScroll from 'better-scroll'
 import shopcart from '@/components/shopcart/shopcart'
 import cartControl from '@/components/cartControl/cartControl'
+import food from '@/components/food/food'
 export default {
   data () {
     return {
       goods: [],
       mapSupports: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
       heightList: [],
-      scrollY: 0
+      scrollY: 0,
+      selectedFood: {}
     }
   },
   methods: {
+    selectFood (food, event) {
+      if (!event._constructed) {
+        return
+      }
+      this.selectedFood = food
+      this.$refs.food.show()
+    },
     _initScroll () {
       this.menuScroll = new BScroll(this.$refs.menuScroll, {
         // better-scroll 会将点击事件去掉，要在这里开启，同时点击在PC 会被执行两次，要在这里控制
@@ -133,7 +143,8 @@ export default {
   props: ['seller'],
   components: {
     shopcart,
-    cartControl
+    cartControl,
+    food
   }
 }
 </script>

@@ -42,10 +42,10 @@
             </div>
         </div>
     </transition>
+    <transition name="fade">
+     <div class="list-mask" v-show="listShow" @click="hideList"></div>
+    </transition>
   </div>
-  <transition name="fade">
-    <div class="list-mask" v-show="listShow" @click="hideList"></div>
-  </transition>
 </div>
 </template>
 
@@ -137,7 +137,9 @@ export default {
       })
     },
     toggleList () {
-      this.fold = !this.fold
+      this.$nextTick(() => {
+        this.fold = !this.fold
+      })
     },
     drop (el) {
       for (let i = 0; i < this.balls.length; i++) {
@@ -402,21 +404,30 @@ export default {
         }
     }
   }
-}
-.list-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 40;
-  background: rgba(7, 17, 27, .6);
-  backdrop-filter: blur(10px);
-  &.fade-enter-active, .fade-leave-active {
-    transition: all .5s;
+  .list-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: rgba(7, 17, 27, .6);
+    backdrop-filter: blur(10px);
+    &.fade-enter-active{
+      opacity:1;
+      transition: all .5s;
+    }
+    &.fade-leave-active{
+      opacity: 0;
+      transition: all .5s;
+    }
+    &.fade-enter{
+      opacity: 0
+    }
+    &.fade-leave {
+      opacity: 1
+    }
   }
-  .fade-enter, .fade-leave-active {
-    opacity: 0
-  }
 }
+
 </style>
