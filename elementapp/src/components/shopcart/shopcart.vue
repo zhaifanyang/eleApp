@@ -35,7 +35,7 @@
                         <span class="name">{{ food.name }}</span>
                         <div class="price">￥{{ food.price * food.count }}</div>
                         <div class="cartcontrol-wrapper">
-                            <cartControl :food="food"></cartControl>
+                            <cartControl :food="food" v-on:cartAdd='drop'></cartControl>
                         </div>
                     </li>
                 </ul>
@@ -158,7 +158,7 @@ export default {
         let ball = this.balls[count]
         if (ball.show) {
           let rect = ball.el.getBoundingClientRect()
-          let x = rect.left - 14
+          let x = rect.left - 20
           let y = -(window.innerHeight - rect.top - 37)
           el.style.display = ''
           el.style.webkitTransform = `translate3d(0,${y}px,0)`
@@ -208,7 +208,10 @@ export default {
       default: 0
     },
     selectFoods: {
-      type: Array
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   components: {

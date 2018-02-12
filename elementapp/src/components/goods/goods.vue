@@ -28,7 +28,7 @@
                   <span class="now">￥{{foods.price}}</span><span class="old" v-if='foods.oldPrice'>￥{{foods.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartControl :food='foods' v-on:cartAdd='cartAdd'></cartControl>
+                  <cartControl :food='foods' @cartAdd='cartAdd'></cartControl>
                 </div>
               </div>
             </li>
@@ -37,7 +37,7 @@
       </ul>
     </div>
     <shopcart :deliveryPrice='seller.deliveryPrice' :minPrice='seller.minPrice' :selectFoods='selectFoods' ref='selectfood'></shopcart>
-    <food :selectedFood='selectedFood' ref='food' v-on:addFirst='cartAdd'></food>
+    <food :food='selectedFood' ref='food' @cartAdd='cartAdd'></food>
   </div>
 </template>
 
@@ -57,11 +57,11 @@ export default {
     }
   },
   methods: {
-    selectFood (food, event) {
+    selectFood (foods, event) {
       if (!event._constructed) {
         return
       }
-      this.selectedFood = food
+      this.selectedFood = foods
       this.$refs.food.show()
     },
     _initScroll () {
@@ -97,10 +97,8 @@ export default {
     //   this.$refs.selectfood.drop(e)
     // },
     cartAdd (e) {
-      // eslint-disable-next-line
       // 体验优化，异步执行下落动画
       this.$nextTick(() => {
-      // eslint-disable-next-line
       // 父组件传递给子组件
         this.$refs.selectfood.drop(e)
       })
