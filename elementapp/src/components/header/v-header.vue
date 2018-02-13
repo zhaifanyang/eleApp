@@ -242,10 +242,11 @@ export default {
         overflow: auto;
         z-index: 100;
         &.fade-enter-active, &.fade-leave-active {
-            transition: opacity .5s
+            transition: all .3s;
         }
         &.fade-enter, &.fade-leave-active {
-            opacity: 0
+            opacity: 0;
+            background: rgba(7,17,27,0);
         }
         .detail-wrapper{
             width: 100%;

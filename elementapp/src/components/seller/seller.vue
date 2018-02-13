@@ -14,6 +14,10 @@
           <li class="seller-item border-right-1px"><p class="item">商家配送</p>{{seller.deliveryPrice}}<span class="price">元</span></li>
           <li class="seller-item"><p class="item">平均配送时间</p>{{seller.deliveryPrice}}<span class="price">分钟</span></li>
         </ul>
+        <div class="favorite">
+          <span :class="{'active': collect}" class="icon-favorite" @click='toggle'></span>
+          <span class="text">{{favorate}}</span>
+        </div>
       </div>
       <splite></splite>
       <div class="bulletin">
@@ -58,7 +62,22 @@ import splite from '@/components/splite/splite'
 export default {
   data () {
     return {
-      mapSupports: ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+      mapSupports: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
+      collect: false
+    }
+  },
+  computed: {
+    favorate () {
+      if (this.collect) {
+        return '已收藏'
+      } else {
+        return '收藏'
+      }
+    }
+  },
+  methods: {
+    toggle () {
+      this.collect = !this.collect
     }
   },
   mounted () {
@@ -100,6 +119,7 @@ export default {
       padding-top: 0.96rem;
       font-size: 0;
       .content-top{
+        position: relative;
         .title{
           margin: 0 0.96rem;
           font-size: 0.746667rem;
@@ -156,6 +176,28 @@ export default {
             .price{
               font-size: 0.533333rem;
             }
+          }
+        }
+        .favorite{
+          position: absolute;
+          right: 0.96rem;
+          top: 0.96rem;
+          width: 1.92rem;
+          text-align: center;
+          .icon-favorite{
+            display: block;
+            font-size: 1.28rem;
+            line-height: 1.28rem;
+            color: rgb(7,17,27);
+            margin-bottom: 0.213333rem;
+            &.active{
+              color: rgb(240,20,20);
+            }
+          }
+          .text{
+            font-size: 0.533333rem;
+            color: rgb(77,85,93);
+            line-height: 0.533333rem;
           }
         }
       }
