@@ -182,11 +182,13 @@ export default {
                 font-size: 0.533333rem;
                 font-weight: 200;
                 vertical-align: top;
+                line-height: 0.533333rem;
             }
             i{
                 font-size: 0.533333rem;
                 margin-left: 0.106667rem;
-                vertical-align: sub;
+                vertical-align: top;
+                line-height: 0.533333rem;
             }
         }
     }

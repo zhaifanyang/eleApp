@@ -27,7 +27,7 @@ export default {
         return
       }
       this.$emit('rating-type', type)
-      this.selectType2 = !this.selectType2
+      this.selectType2 = type
     },
     toggleContent (onlyContent, event) {
       if (!event._constructed) {
